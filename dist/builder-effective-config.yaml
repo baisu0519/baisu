@@ -1,0 +1,10 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.eyeprotect.app
+win:
+  target: nsis
+forceCodeSigning: false
+publish: null
+files: []
+electronVersion: 30.5.1
