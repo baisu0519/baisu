@@ -52,6 +52,7 @@ const LANG = {
     soundOff:   "🔇 开启提示音",
     volume:     "音量",
     soundLabel: "提示音",
+    customSoundLabel: "自定义提示音",
     bgLabel:    "背景图片",
     statusLabel:"AI 检测中",
     pipLabel:   "小窗模式",
@@ -109,6 +110,7 @@ const LANG = {
     soundOff:   "🔇 Sound On",
     volume:     "Volume",
     soundLabel: "Alert Sound",
+    customSoundLabel: "Custom Alert Sound",
     bgLabel:    "Background",
     statusLabel:"AI Detecting",
     pipLabel:   "Mini Window",
@@ -166,6 +168,7 @@ const LANG = {
     soundOff:   "🔇 소리 켜기",
     volume:     "볼륨",
     soundLabel: "알림음",
+    customSoundLabel: "사용자 알림음",
     bgLabel:    "배경 이미지",
     statusLabel:"AI 감지 중",
     pipLabel:   "미니 창",
@@ -340,6 +343,43 @@ function setupUI() {
       localStorage.setItem("soundIndex", currentSoundIndex);
     };
   }
+  const customUpload = document.getElementById("customSoundUpload");
+
+if (customUpload) {
+  customUpload.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+
+    stopSound();
+
+    const customAudio = new Audio(url);
+    customAudio.loop = true;
+
+    const currentVolume = parseFloat(
+      localStorage.getItem("volume") || "1"
+    );
+
+    customAudio.volume = currentVolume;
+
+    soundList.push(customAudio);
+
+    currentSoundIndex = soundList.length - 1;
+    activeSound = customAudio;
+
+    const selector = document.getElementById("soundSelector");
+
+    const option = document.createElement("option");
+    option.value = currentSoundIndex;
+    option.text = file.name;
+
+    selector.appendChild(option);
+    selector.value = currentSoundIndex;
+
+    localStorage.setItem("soundIndex", currentSoundIndex);
+  };
+}
 }
 
 function showStartTip() {
@@ -384,7 +424,8 @@ function applyLang() {
     "ctaTitle","ctaSub","ctaBtn","footerText",
 
 
-    "appTitle","statusLabel","pipLabel","volume","soundLabel","bgLabel"
+"appTitle","statusLabel","pipLabel","volume",
+"soundLabel","bgLabel","customSoundLabel"
   ].forEach(id => setText(id, t[id]));
 
   const st = document.getElementById("soundToggle");
